@@ -29,8 +29,6 @@ var onOff = require('onoff').Gpio;
 *	- 'value' = the value for direction 'out'
 */
 function execute(opts) {
-	console.log("received execute command with opts:");
-	console.log(opts);
 	if(opts==='undefined') {
 		throw new Error("arguments for execute missing");
 	}
@@ -63,12 +61,6 @@ function sendOutput(pin, value) {
 		console.log("should turn " + value);
 		gpioPin.writeSync(parseInt(value));
 		gpioPin.unexport();
-		// console.log("received sendOutput command with pin:" + pin + " value:" + value);
-		// var gpioPin = new onOff(pin, 'out');
-		// console.log("should turn " + value);
-		// gpioPin.writeSync(value);
-		// gpioPin.unexport();
-		// console.log("should be successful");
 }
 
 /**
@@ -89,10 +81,12 @@ function listenEvent(eventId, opts) {
 
 //after value change on listener port was noticed, listener gets deactivated for 20 ms (to not call listener more than once)
 function listenOnPort(eventId, listenPort) {
+	console.log('GPIO: listening on GPIO port '+listenPort);
 	listenPort.watch(function(err, value) {
 		listenPort.unwatch();
+		process.emit(eventId+'', eventId, listenPort.readSync());
+		console.log("GPIO: value: "+listenPort.readSync());
 		setTimeout(function() {
-			process.emit(eventId+'', eventId, listenPort.readSync());
 			listenOnPort(eventId, listenPort);
 		},20);
 	});
