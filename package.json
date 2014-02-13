@@ -4,6 +4,6 @@
   "description": "Plugin for pi@home home automation system",
   "author": "Nikolaus Kofler",
   "devDependencies": {
-    "onoff": "~0.2.3",
+    "onoff": "~0.2.3"
   }
 }

@@ -56,9 +56,7 @@ function execute(opts) {
 */
 function sendOutput(pin, value) {
 
-		console.log("received sendOutput command with pin:" + pin + " value:" + value);
 		var gpioPin = new onOff(pin, 'out');
-		console.log("should turn " + value);
 		gpioPin.writeSync(parseInt(value));
 		gpioPin.unexport();
 }
@@ -81,11 +79,9 @@ function listenEvent(eventId, opts) {
 
 //after value change on listener port was noticed, listener gets deactivated for 20 ms (to not call listener more than once)
 function listenOnPort(eventId, listenPort) {
-	console.log('GPIO: listening on GPIO port '+listenPort);
 	listenPort.watch(function(err, value) {
 		listenPort.unwatch();
 		process.emit(eventId+'', eventId, listenPort.readSync());
-		console.log("GPIO: value: "+listenPort.readSync());
 		setTimeout(function() {
 			listenOnPort(eventId, listenPort);
 		},20);
